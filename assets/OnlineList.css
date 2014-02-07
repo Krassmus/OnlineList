@@ -1,0 +1,4 @@
+#nav_onlinelist { display: none; }
+@-moz-document url-prefix() {
+    #nav_onlinelist { display: inherit; }
+}
