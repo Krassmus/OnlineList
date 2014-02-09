@@ -1,6 +1,12 @@
 <script>
-window.setTimeout(function () {
-    window.location.reload();
+window.setInterval(function () {
+    jQuery.ajax({
+        'url': STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/onlinelist/sidebar_users",
+        'success': function (data) {
+            console.log(data);
+            jQuery("#online_users").html(data);
+        }
+    });
 }, 5000);
 </script>
 <style>
@@ -34,22 +40,15 @@ window.setTimeout(function () {
     #content .name {
         text-align: center;
     }
+    #content .actions {
+        text-align: center;
+    }
 </style>
 <div id="content">
-    <div>
+    <div style="text-align: center; margin: 2px;">
         <?= $quicksearch->render() ?>
     </div>
-    <ul>
-        <? if (count($contacts)) : ?>
-        <? foreach ($contacts as $contact) : ?>
-        <li>
-            <div class="avatar" style="background-image: url('<?= Avatar::getAvatar($contact['user_id'])->getURL(Avatar::MEDIUM) ?>')"></div>
-            <div class="name"><?= htmlReady($contact['name']) ?></div>
-            <div style="clear: both;"></div>
-        </li>
-        <? endforeach ?>
-        <? else : ?>
-        <li><?= _("Keine Kontakte online") ?></li>
-        <? endif ?>
+    <ul id="online_users">
+        <?= $this->render_partial("_sidebar_users.php", compact('contacts')) ?>
     </ul>
 </div>

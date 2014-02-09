@@ -38,6 +38,29 @@ class OnlineList extends StudIPPlugin implements SystemPlugin {
         echo $template->render();
     }
     
+    public function sidebar_users_action() {
+        $query = "SELECT a.user_id, a.username, CONCAT(Vorname, ' ', Nachname) AS name
+                 FROM user_online uo
+                    JOIN auth_user_md5 a ON (a.user_id = uo.user_id)
+                    LEFT JOIN user_info ON (user_info.user_id = uo.user_id)
+                    LEFT JOIN user_visibility ON (user_visibility.user_id = uo.user_id)
+                    INNER JOIN contact ON (owner_id = :me AND contact.user_id = a.user_id)
+                 WHERE last_lifesign > :last_lifesign 
+                    AND uo.user_id <> :me
+                    AND " . get_vis_query('a', 'online') . " > 0
+                 ORDER BY Nachname ASC, Vorname ASC";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            'me' => $GLOBALS['user']->id,
+            'last_lifesign' => time() - 10 * 60,
+        ));
+        $contacts = $statement->fetchAll(PDO::FETCH_ASSOC);
+        
+        $template = $this->getTemplate("_sidebar_users.php", null);
+        $template->set_attribute('contacts', $contacts);
+        echo studip_utf8encode($template->render());
+    }
+    
     protected function getTemplate($template_file_name, $layout = "without_infobox") {
         if (!$this->template_factory) {
             $this->template_factory = new Flexi_TemplateFactory(dirname(__file__)."/templates");
