@@ -10,6 +10,15 @@ class OnlineList extends StudIPPlugin implements SystemPlugin {
         $activator = new Navigation(_("OnlineListe"), "#");
         $activator->setImage(Assets::image_path("header/community.png"));
         Navigation::addItem("/onlinelist", $activator);
+        
+        //Die voreingestellten Aktionen der Nutzer
+        $nav = new Navigation(_("Nachricht verfassen"), URLHelper::getURL("sms_send.php", array('rec_uname' => ':username')));
+        $nav->setImage(Assets::image_path("icons/16/blue/mail.png"), array('title' => _("Nachricht verfassen")));
+        Navigation::addItem("/onlinelist/messaging", $nav);
+        
+        $nav = new Navigation(_("anblubbern"), URLHelper::getURL("plugins.php/blubber/streams/global?mention=:username", array('mention' => ':username')));
+        $nav->setImage(Assets::image_path("icons/16/blue/blubber.png"), array('title' => _("anblubbern")));
+        Navigation::addItem("/onlinelist/blubber", $nav);
     }
     
     public function sidebar_action() {

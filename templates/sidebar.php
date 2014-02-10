@@ -8,6 +8,11 @@ window.setInterval(function () {
         }
     });
 }, 5000);
+jQuery(".actions [data-chaturl]").live("click", function () {
+    var chaturl = jQuery(this).data("chaturl");
+    navigator.mozSocial.openChatWindow(chaturl);
+    return false;
+});
 </script>
 <style>
     body {
