@@ -40,6 +40,7 @@ class OnlineList extends StudIPPlugin implements SystemPlugin {
         $contacts = $statement->fetchAll(PDO::FETCH_ASSOC);
         
         $quicksearch = new QuickSearch("new_contact", new StandardSearch("user_id"));
+        $quicksearch->fireJSFunctionOnSelect("STUDIP.OnlineList.addContact");
         
         $template = $this->getTemplate("sidebar.php", $this->getTemplate("emptylayout.php", null));
         $template->set_attribute('contacts', $contacts);

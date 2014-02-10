@@ -3,7 +3,6 @@ window.setInterval(function () {
     jQuery.ajax({
         'url': STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/onlinelist/sidebar_users",
         'success': function (data) {
-            console.log(data);
             jQuery("#online_users").html(data);
         }
     });
@@ -13,6 +12,12 @@ jQuery(".actions [data-chaturl]").live("click", function () {
     navigator.mozSocial.openChatWindow(chaturl);
     return false;
 });
+STUDIP.OnlineList = {
+    addContact: function (user_id, name) {
+        console.log(user_id);
+    }
+};
+STUDIP.jsupdate_enable = false;
 </script>
 <style>
     body {
