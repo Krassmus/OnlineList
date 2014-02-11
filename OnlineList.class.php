@@ -17,7 +17,10 @@ class OnlineList extends StudIPPlugin implements SystemPlugin {
         Navigation::addItem("/onlinelist/messaging", $nav);
         
         $nav = new Navigation(_("anblubbern"), URLHelper::getURL("plugins.php/blubber/streams/global?mention=:username", array('mention' => ':username')));
-        $nav->setImage(Assets::image_path("icons/16/blue/blubber.png"), array('title' => _("anblubbern")));
+        $nav->setImage(Assets::image_path("icons/16/blue/blubber.png"), array(
+            'title' => _("anblubbern"),
+            'data-chaturl' => PluginEngine::getURL($this, array('username' => ":username"), 'privateblubber')
+        ));
         Navigation::addItem("/onlinelist/blubber", $nav);
     }
     
@@ -71,16 +74,28 @@ class OnlineList extends StudIPPlugin implements SystemPlugin {
         echo studip_utf8encode($template->render());
     }
     
+    public function privateblubber_action() {
+        $user = new User(get_userid(Request::get("username")));
+        PageLayout::setTitle($user['Vorname']." ".$user['Nachname']);
+        PageLayout::removeHeadElement("link", array('rel' => 'shortcut icon'));
+        PageLayout::addHeadElement("link", array('rel' => 'shortcut icon', 'href' => Assets::image_path("icons/32/black/blubber.png")));
+        
+        $template = $this->getTemplate("privateblubber.php", $this->getTemplate("emptylayout.php", null));
+        echo $template->render();
+    }
+    
     protected function getTemplate($template_file_name, $layout = "without_infobox") {
         if (!$this->template_factory) {
             $this->template_factory = new Flexi_TemplateFactory(dirname(__file__)."/templates");
         }
         $template = $this->template_factory->open($template_file_name);
         if ($layout) {
-            if (method_exists($this, "getDisplayName")) {
-                PageLayout::setTitle($this->getDisplayName());
-            } else {
-                PageLayout::setTitle(get_class($this));
+            if (!PageLayout::getTitle()) {
+                if (method_exists($this, "getDisplayName")) {
+                    PageLayout::setTitle($this->getDisplayName());
+                } else {
+                    PageLayout::setTitle(get_class($this));
+                }
             }
             if (is_a($layout, "flexi_template")) {
                 $template->set_layout($layout);

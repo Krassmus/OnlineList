@@ -10,7 +10,9 @@
                 <a href="<?= URLHelper::getLink($url) ?>" target="_blank">
                     <?
                     $image = $action_nav->getImage();
-                    $image['data-chaturl'] = str_replace(array(':user_id',':username','%3Auser_id','%3Ausername'), array($contact['user_id'], $contact['username'],$contact['user_id'], $contact['username']), $image['data-chaturl']);
+                    if ($image['data-chaturl']) {
+                        $image['data-chaturl'] = str_replace(array(':user_id',':username','%3Auser_id','%3Ausername'), array($contact['user_id'], $contact['username'],$contact['user_id'], $contact['username']), $image['data-chaturl']);
+                    }
                     echo Assets::img($image['src'], array_map("htmlready", $image));
                     ?>
                 </a>
