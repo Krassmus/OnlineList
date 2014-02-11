@@ -1,5 +1,7 @@
 <?php
 
+require_once 'lib/messaging.inc.php';
+
 class OnlineList extends StudIPPlugin implements SystemPlugin {
     
     public function __construct() {
@@ -42,8 +44,8 @@ class OnlineList extends StudIPPlugin implements SystemPlugin {
         ));
         $contacts = $statement->fetchAll(PDO::FETCH_ASSOC);
         
-        $quicksearch = new QuickSearch("new_contact", new StandardSearch("user_id"));
-        $quicksearch->fireJSFunctionOnSelect("STUDIP.OnlineList.addContact");
+        $quicksearch = new QuickSearch("new_contact", new StandardSearch("username"));
+        $quicksearch->fireJSFunctionOnSelect("STUDIP.OnlineList.askToAddContact");
         
         $template = $this->getTemplate("sidebar.php", $this->getTemplate("emptylayout.php", null));
         $template->set_attribute('contacts', $contacts);
@@ -82,6 +84,17 @@ class OnlineList extends StudIPPlugin implements SystemPlugin {
         
         $template = $this->getTemplate("privateblubber.php", $this->getTemplate("emptylayout.php", null));
         echo $template->render();
+    }
+    
+    public function add_contact_action() {
+        if (!Request::isPost()) {
+            throw new Exception(_("Kein Zugriff über GET"));
+        }
+        $username = Request::username('username');
+
+        $msging = new messaging;
+        //Buddie hinzufuegen
+        $msging->add_buddy($username, 0);
     }
     
     protected function getTemplate($template_file_name, $layout = "without_infobox") {

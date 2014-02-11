@@ -20,6 +20,4 @@ jQuery(function () { jQuery("textarea.blubber").focus(); });
 </script>
 
 
-<textarea class="blubber">
-    @<?= htmlReady(Request::get("username")) ?>, 
-</textarea>
+<textarea class="blubber">@<?= htmlReady(Request::get("username")) ?>, </textarea>
