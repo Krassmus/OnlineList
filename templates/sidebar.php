@@ -96,7 +96,7 @@ STUDIP.jsupdate_enable = false;
         <div id="add_user_question" style="display: none; border-top: #aaaaaa solid 1px; font-size: 0.8em;">
             <a class="name"></a><?= _(" als Kontakt hinzufügen?") ?>
             <div>
-                <?= \Studip\Button::createAccept(_("Ja"), "", array('onclick' => "")) ?><?= \Studip\Button::createCancel(_("Nein"), "", array('onclick' => "STUDIP.OnlineList.dontAddContact();")) ?>
+                <?= \Studip\Button::createAccept(_("Ja"), "", array('onclick' => "STUDIP.OnlineList.addContact();")) ?><?= \Studip\Button::createCancel(_("Nein"), "", array('onclick' => "STUDIP.OnlineList.dontAddContact();")) ?>
             </div>
         </div>
     </div>
