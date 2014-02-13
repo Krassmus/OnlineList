@@ -16,13 +16,13 @@ class OnlineList extends StudIPPlugin implements SystemPlugin {
         $activator->setImage(Assets::image_path("header/community.png"));
         Navigation::addItem("/onlinelist", $activator);
         
-        HookCenter::register("OnlineUserAction", function ($navigation) {
+        HookCenter::register("DisplayOnlineUserActionHook", function ($navigation) {
             //Die voreingestellten Aktionen der Nutzer
-            $nav = new OnlineUserAction(_("Nachricht verfassen"), URLHelper::getURL("sms_send.php", array('rec_uname' => ':username')));
+            $nav = new DisplayOnlineUserActionHook(_("Nachricht verfassen"), URLHelper::getURL("sms_send.php", array('rec_uname' => ':username')));
             $nav->setImage(Assets::image_path("icons/16/blue/mail.png"), array('title' => _("Nachricht verfassen")));
             $navigation->addSubNavigation("messaging", $nav);
 
-            $nav = new OnlineUserAction(_("anblubbern"), URLHelper::getURL("plugins.php/blubber/streams/global?mention=:username", array('mention' => ':username')));
+            $nav = new DisplayOnlineUserActionHook(_("anblubbern"), URLHelper::getURL("plugins.php/blubber/streams/global?mention=:username", array('mention' => ':username')));
             $nav->setImage(Assets::image_path("icons/16/blue/blubber.png"), array(
                 'title' => _("anblubbern"),
                 'data-chaturl' => PluginEngine::getURL($this, array('username' => ":username"), 'privateblubber')
@@ -39,7 +39,7 @@ class OnlineList extends StudIPPlugin implements SystemPlugin {
         $quicksearch = new QuickSearch("new_contact", new StandardSearch("username"));
         $quicksearch->fireJSFunctionOnSelect("STUDIP.OnlineList.askToAddContact");
         
-        $actions = HookCenter::run("OnlineUserAction", new OnlineUserAction("onlinelist"));
+        $actions = HookCenter::run("DisplayOnlineUserActionHook", new DisplayOnlineUserActionHook("onlinelist"));
         
         $template = $this->getTemplate("sidebar.php", $this->getTemplate("emptylayout.php", null));
         $template->set_attribute('contacts', $contacts);
@@ -50,7 +50,7 @@ class OnlineList extends StudIPPlugin implements SystemPlugin {
     
     public function sidebar_users_action() {
         $contacts = $this->getOnlineContacts();
-        $actions = HookCenter::run("OnlineUserAction", new OnlineUserAction("onlinelist"));
+        $actions = HookCenter::run("DisplayOnlineUserActionHook", new DisplayOnlineUserActionHook("onlinelist"));
         
         $template = $this->getTemplate("_sidebar_users.php", null);
         $template->set_attribute('contacts', $contacts);

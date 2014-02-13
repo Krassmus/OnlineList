@@ -1,6 +1,6 @@
 <?php
 
-interface HookClass 
+interface Hook 
 {
     /**
      * This should return a string that contains information on how and when and
@@ -13,7 +13,7 @@ interface HookClass
     public function getDescription();
 }
 
-class ActionNavigation extends Navigation implements HookClass {
+class ActionNavigationHook extends Navigation implements Hook {
     
     protected $postvars = array();
     
@@ -57,7 +57,7 @@ class ActionNavigation extends Navigation implements HookClass {
     }
 }
 
-class OnlineUserAction extends ActionNavigation {}
+class DisplayOnlineUserActionHook extends ActionNavigationHook {}
 
 class HookCenter 
 {
@@ -96,8 +96,8 @@ class HookCenter
         if ($instance === null or !is_a($instance, $hookclass)) {
             $instance = new $hookclass();
         }
-        if (!is_a($instance, "HookClass")) {
-            throw new Exception(sprintf("%s is not implementing the HookClass interface.", $hookclass));
+        if (!is_a($instance, "Hook")) {
+            throw new Exception(sprintf("%s is not implementing the Hook-interface.", $hookclass));
         }
         foreach (self::$hooks as $hook => $callables) {
             if ($hook === $hookclass) {
