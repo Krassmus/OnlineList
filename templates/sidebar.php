@@ -101,6 +101,6 @@ STUDIP.jsupdate_enable = false;
         </div>
     </div>
     <ul id="online_users">
-        <?= $this->render_partial("_sidebar_users.php", compact('contacts')) ?>
+        <?= $this->render_partial("_sidebar_users.php", compact('contacts', 'actions')) ?>
     </ul>
 </div>

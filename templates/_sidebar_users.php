@@ -4,7 +4,7 @@
             <div class="avatar" style="background-image: url('<?= Avatar::getAvatar($contact['user_id'])->getURL(Avatar::MEDIUM) ?>')"></div>
             <div class="name"><a href="<?= URLHelper::getLink("dispatch.php/profile", array('username' => $contact['username'])) ?>" target="_blank"><?= htmlReady($contact['name']) ?></a></div>
             <div class="actions">
-                <? foreach (Navigation::getItem("/onlinelist")->getSubNavigation() as $action_nav) : ?>
+                <? foreach ($actions->getSubNavigation() as $action_nav) : ?>
                 <? if ($action_nav->getImage()) : ?>
                 <? $url = str_replace(array(':user_id',':username','%3Auser_id','%3Ausername'), array($contact['user_id'], $contact['username'],$contact['user_id'], $contact['username']), $action_nav->getURL()) ?>
                 <a href="<?= URLHelper::getLink($url) ?>" target="_blank">
