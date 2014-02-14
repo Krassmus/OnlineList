@@ -36,7 +36,7 @@ class ActionNavigationHook extends Navigation implements Hook {
     
     protected $postvars = array();
     
-    public function addPostVariable($varname, $value) {
+    public function setPostVariable($varname, $value) {
         if ($value !== null) {
             $this->postvars[$varname] = $value;
         } else {
