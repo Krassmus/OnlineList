@@ -25,7 +25,7 @@ class OnlineList extends StudIPPlugin implements SystemPlugin {
             $nav = new DisplayOnlineUserActionHook(_("anblubbern"), URLHelper::getURL("plugins.php/blubber/streams/global?mention=:username", array('mention' => ':username')));
             $nav->setImage(Assets::image_path("icons/16/blue/blubber.png"), array(
                 'title' => _("anblubbern"),
-                'data-chaturl' => PluginEngine::getURL($this, array('username' => ":username"), 'privateblubber')
+                'data-chaturl' => URLHelper::getURL("plugins.php/onlinelist/privateblubber", array('username' => ":username"))
             ));
             $navigation->addSubNavigation("blubber", $nav);
         });
