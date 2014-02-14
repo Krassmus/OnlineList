@@ -119,7 +119,7 @@ class HookCenter
     /**
      * Registers a callback function for the case that the given hook is run.
      * @param string $hookclass : name of the hookclass is the name of the hook itself.
-     * @param callable $callable : your callback. The first argument of the 
+     * @param callable|closure $callable : your callback. The first argument of the 
      * callback-function will be an instance of type $hookclass your callback
      * receives from the HookCenter when the hook is run. See documentation of
      * the $hookclass to know how your callback can interact with the hook.
