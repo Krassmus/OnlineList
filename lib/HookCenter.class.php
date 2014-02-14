@@ -124,7 +124,7 @@ class HookCenter
      * receives from the HookCenter when the hook is run. See documentation of
      * the $hookclass to know how your callback can interact with the hook.
      */
-    static public function register($hookclass, callable $callable) 
+    static public function register($hookclass, $callable) 
     {
         self::$hooks[$hookclass][] = $callable;
     }
