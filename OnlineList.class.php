@@ -59,12 +59,12 @@ class OnlineList extends StudIPPlugin implements SystemPlugin {
     }
     
     protected function getOnlineContacts() {
-        $query = "SELECT auth_user_md5.user_id, auth_user_md5.username, CONCAT(auth_user_md5.Vorname, ' ', auth_user_md5.Nachname) AS name
+        $query = "SELECT auth_user_md5.user_id, auth_user_md5.username, CONCAT(auth_user_md5.Vorname, ' ', auth_user_md5.Nachname) AS name, (UNIX_TIMESTAMP() - user_online.last_lifesign) AS inactive_seconds
                  FROM user_online
                     INNER JOIN auth_user_md5 ON (auth_user_md5.user_id = user_online.user_id)
                     INNER JOIN contact ON (contact.user_id = auth_user_md5.user_id)
                     LEFT JOIN user_visibility ON (user_visibility.user_id = user_online.user_id)
-                 WHERE user_online.last_lifesign > :last_lifesign 
+                 WHERE user_online.last_lifesign > (UNIX_TIMESTAMP() - 10 * 60) 
                     AND user_online.user_id <> :me
                     AND contact.owner_id = :me
                     AND contact.buddy > 0
@@ -72,8 +72,7 @@ class OnlineList extends StudIPPlugin implements SystemPlugin {
                  ORDER BY Nachname ASC, Vorname ASC";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array(
-            'me' => $GLOBALS['user']->id,
-            'last_lifesign' => time() - 10 * 60,
+            'me' => $GLOBALS['user']->id
         ));
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }

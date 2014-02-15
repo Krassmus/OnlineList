@@ -2,7 +2,7 @@
         <? foreach ($contacts as $contact) : ?>
         <li>
             <div class="avatar" style="background-image: url('<?= Avatar::getAvatar($contact['user_id'])->getURL(Avatar::MEDIUM) ?>')"></div>
-            <div class="name"><a href="<?= URLHelper::getLink("dispatch.php/profile", array('username' => $contact['username'])) ?>" target="_blank"><?= htmlReady($contact['name']) ?></a></div>
+            <div class="name"><a href="<?= URLHelper::getLink("dispatch.php/profile", array('username' => $contact['username'])) ?>" target="_blank" title="<?= sprintf(_("Letztes Lebenszeichen vor %s"), $contact['inactive_seconds'] <= 60 ? $contact['inactive_seconds']." Sekunden" : floor($contact['inactive_seconds'] / 60)." Minuten") ?>"><?= htmlReady($contact['name']) ?></a></div>
             <div class="actions">
             <? foreach ($actions->getSubNavigation() as $action_nav) : ?>
                 <? if ($action_nav->getImage()) : ?>
