@@ -8,12 +8,12 @@ STUDIP.OnlineList = {
             "icon64URL": STUDIP.ASSETS_URL + "/images/icons/64/blue/seminar.png",
 
             // at least one of these must be defined
-            //"workerURL": STUDIP.ABSOLUTE_URI_STUDIP + "/worker.js",
-            "sidebarURL": STUDIP.ABSOLUTE_URI_STUDIP + "/plugins.php/OnlineList/sidebar",
-            //"shareURL": STUDIP.ABSOLUTE_URI_STUDIP+"/share.html?url=%{url}",
+            "workerURL": STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/OnlineList/worker",
+            "sidebarURL": STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/OnlineList/sidebar",
+            //"shareURL": STUDIP.ABSOLUTE_URI_STUDIP+"plugins.php/OnlineList/share?url=%{url}",
 
             // status buttons are scheduled for Firefox 26 or 27
-            //"statusURL": baseurl+"/statusPanel.html",
+            //"statusURL": STUDIP.ABSOLUTE_URI_STUDIP + "/plugins.php/OnlineList/status",
 
             // social bookmarks are available in Firefox 26
             //"markURL": baseurl+"/mark.html?url=%{url}",

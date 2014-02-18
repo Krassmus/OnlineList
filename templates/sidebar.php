@@ -40,9 +40,18 @@ STUDIP.OnlineList = {
                 jQuery("#new_contact_1").val("");
             }
         });
+    },
+    openNotificationWindow: function () {
+        navigator.mozSocial.openPanel(
+            STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/onlinelist/notifications", 
+            15
+        );
     }
 };
-STUDIP.jsupdate_enable = false;
+//STUDIP.jsupdate_enable = false;
+jQuery(function () {
+    jQuery("#notification_marker").bind("click", STUDIP.OnlineList.openNotificationWindow);
+});
 </script>
 <style>
     body {
@@ -82,7 +91,7 @@ STUDIP.jsupdate_enable = false;
     #new_contact_1 {
         color: white;
         background-color: #899AB9;
-        width: calc(100% - 26px);
+        width: calc(100% - 36px);
         border: none;
     }
     
@@ -91,7 +100,20 @@ STUDIP.jsupdate_enable = false;
     }
 </style>
 <div id="content">
-    <div style="text-align: center; background-color: #899AB9; color: #eeeeee; padding: 2px; padding-top: 3px; border-bottom: #1E3E70 1px solid;">
+    <div style="text-align: center; background-color: #899AB9; color: #eeeeee; padding: 2px; padding-top: 0px; border-bottom: #1E3E70 1px solid;">
+        <? $notifications = PersonalNotifications::getMyNotifications() ?>
+        <? $lastvisit = (int) UserConfig::get($GLOBALS['user']->id)->getValue('NOTIFICATIONS_SEEN_LAST_DATE') ?>
+        <? foreach ($notifications as $notification) {
+            if ($notification['mkdate'] > $lastvisit) {
+                $alert = true;
+            }
+        } ?>
+        <a id="notification_marker" style="display: inline-block; cursor: pointer;">0</a>
+        <div class="list below" id="notification_list" style="display: none;">
+            <ul>
+            </ul>
+        </div>
+        
         <?= $quicksearch->render() ?>
         <div id="add_user_question" style="display: none; border-top: #aaaaaa solid 1px; font-size: 0.8em;">
             <a class="name"></a><?= _(" als Kontakt hinzufügen?") ?>

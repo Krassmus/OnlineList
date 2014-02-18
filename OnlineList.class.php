@@ -58,6 +58,17 @@ class OnlineList extends StudIPPlugin implements SystemPlugin {
         echo studip_utf8encode($template->render());
     }
     
+    public function status_action() {
+        $template = $this->getTemplate("status.php", null);
+        echo $template->render();
+    }
+    
+    public function worker_action() {
+        header("Content-Type: text/javascript");
+        $template = $this->getTemplate("worker.php", null);
+        echo $template->render();
+    }
+    
     protected function getOnlineContacts() {
         $query = "SELECT auth_user_md5.user_id, auth_user_md5.username, CONCAT(auth_user_md5.Vorname, ' ', auth_user_md5.Nachname) AS name, (UNIX_TIMESTAMP() - user_online.last_lifesign) AS inactive_seconds
                  FROM user_online
@@ -96,6 +107,13 @@ class OnlineList extends StudIPPlugin implements SystemPlugin {
         $msging = new messaging;
         //Buddie hinzufuegen
         $msging->add_buddy($username, 0);
+    }
+    
+    public function notifications_action() {
+        $notifications = PersonalNotifications::getMyNotifications();
+        $template = $this->getTemplate("notifications.php", $this->getTemplate("emptylayout.php", null));
+        $template->set_attribute('notifications', $notifications);
+        echo $template->render();
     }
     
     protected function getTemplate($template_file_name, $layout = "without_infobox") {
