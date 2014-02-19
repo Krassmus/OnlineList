@@ -135,4 +135,4 @@ jQuery(function () {
 </div>
 
 
-<div id="debug_window">blubb</div>
+<div id="debug_window"></div>
