@@ -49,6 +49,7 @@ window.setInterval(function () {
     } else {
         jQuery("#no_notifications").hide();
     }
+    jQuery("#notification_list > ul > li a[href]").attr("target", "_blank");
     jQuery("body").css("height", jQuery("#notification_container").height() + "px");
 }, 500);
 </script>
