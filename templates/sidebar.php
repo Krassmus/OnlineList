@@ -46,9 +46,13 @@ STUDIP.OnlineList = {
             STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/onlinelist/notifications", 
             15
         );
-        navigator.mozSocial.getWorker().port.onmessage = function(e) {
+        navigator.mozSocial.getWorker().port.onmessage = function onmessage(e) {
+            //dump("SIDEBAR Got message: " + e.data.topic + " " + e.data.data +"\n");
+            var topic = e.data.topic;
+            var data = e.data.data;
             jQuery("#debug_window").text("hey!");
-        }
+        };
+        
         navigator.mozSocial.getWorker().port.postMessage({
             topic: "jsupdater.register",
             data: {}
