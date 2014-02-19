@@ -42,6 +42,16 @@
         text-align: center;
     }
 </style>
+<script>
+window.setInterval(function () {
+    if (jQuery("#notification_list > ul > li").length === 0) {
+        jQuery("#no_notifications").show();
+    } else {
+        jQuery("#no_notifications").hide();
+    }
+    jQuery("body").css("height", jQuery("#notification_container").height() + "px");
+}, 500);
+</script>
 
 <div id="notification_container">
     <div id="notification_list">
@@ -51,6 +61,7 @@
             <? endforeach ?>
         </ul>
     </div>
+    <div id="no_notifications" style="<?= count($notifications) === 0 ? "" : "display: none; " ?>text-align: center; padding: 40px;"><?= _("Keine Benachrichtigungen") ?></div>
 </div>
 
 <div id="notification_marker" style="display: none;"></div>
