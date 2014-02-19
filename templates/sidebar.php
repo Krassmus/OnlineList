@@ -46,6 +46,13 @@ STUDIP.OnlineList = {
             STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/onlinelist/notifications", 
             15
         );
+        navigator.mozSocial.getWorker().port.onmessage = function(e) {
+            jQuery("#debug_window").text("hey!");
+        }
+        navigator.mozSocial.getWorker().port.postMessage({
+            topic: "jsupdater.register",
+            data: {}
+        });
     }
 };
 //STUDIP.jsupdate_enable = false;
@@ -126,3 +133,6 @@ jQuery(function () {
         <?= $this->render_partial("_sidebar_users.php", compact('contacts', 'actions')) ?>
     </ul>
 </div>
+
+
+<div id="debug_window">blubb</div>

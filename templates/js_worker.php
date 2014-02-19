@@ -20,7 +20,7 @@ onconnect = function(e) {
                 data: {
                     iconURL: "<?= Avatar::getAvatar($GLOBALS['user']->id)->getURL(Avatar::SMALL)?>",
                     portrait: "<?= Avatar::getAvatar($GLOBALS['user']->id)->getURL(Avatar::MEDIUM)?>",
-                    userName: "<?= htmlReady(get_username()) ?>",
+                    userName: "<?= htmlReady(get_fullname()) ?>",
                     displayName: "<?= htmlReady(get_fullname()) ?>",
                     profileURL: "<?= URLHelper::getURL("dispatch.php/profile", array('username' => get_username()))?>"
                 }
