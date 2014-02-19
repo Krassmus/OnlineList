@@ -108,7 +108,7 @@ jQuery(function () {
                 $alert = true;
             }
         } ?>
-        <a id="notification_marker" style="display: inline-block; cursor: pointer;">0</a>
+        <a id="notification_marker" style="display: inline-block; cursor: pointer;"><?= count($notifications) ?></a>
         <div class="list below" id="notification_list" style="display: none;">
             <ul>
             </ul>

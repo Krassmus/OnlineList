@@ -65,7 +65,7 @@ class OnlineList extends StudIPPlugin implements SystemPlugin {
     
     public function worker_action() {
         header("Content-Type: text/javascript");
-        $template = $this->getTemplate("worker.php", null);
+        $template = $this->getTemplate("js_worker.php", null);
         echo $template->render();
     }
     

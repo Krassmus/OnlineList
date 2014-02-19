@@ -26,6 +26,14 @@ onconnect = function(e) {
                 }
             });
         }
+        if (msg.topic === "jsupdater.register") {
+            port.postMessage({
+                topic: "jsupdater.registered",
+                data: {
+                    text: "you are registered for updates"
+                }
+            });
+        }
     }
 }
 
