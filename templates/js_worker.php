@@ -18,7 +18,7 @@ onconnect = function(e) {
             port.postMessage({
                 topic: "social.user-profile", 
                 data: {
-                    iconURL: "<?= Avatar::getAvatar($GLOBALS['user']->id)->getURL(Avatar::SMALL)?>",
+                iconURL: "<?= Assets::image_path("icons/32/blue/seminar.png") ?>",
                     portrait: "<?= Avatar::getAvatar($GLOBALS['user']->id)->getURL(Avatar::MEDIUM)?>",
                     userName: "<?= htmlReady(get_fullname()) ?>",
                     displayName: "<?= htmlReady(get_fullname()) ?>",
