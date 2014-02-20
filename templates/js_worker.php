@@ -3,9 +3,11 @@ var ports = [];
 var JSUpdater = {
     ports: [],
     fetchData: function () {
+        throw JSON.stringify(JSUpdater.ports);
         if (!JSUpdater.ports.length) {
             return;
         }
+        
         //fetch data
         var r = new XMLHttpRequest(); 
         r.open(
@@ -48,11 +50,11 @@ onconnect = function(e) {
             port.postMessage({
                 topic: "social.user-profile", 
                 data: {
-                iconURL: "<?= Assets::image_path("icons/32/blue/seminar.png") ?>",
+                iconURL: "<?= Assets::image_path("icons/16/blue/seminar.png") ?>",
                     portrait: "<?= Avatar::getAvatar($GLOBALS['user']->id)->getURL(Avatar::MEDIUM)?>",
                     userName: "<?= htmlReady(get_fullname()) ?>",
                     displayName: "<?= htmlReady(get_fullname()) ?>",
-                    profileURL: "<?= URLHelper::getURL("dispatch.php/profile", array('username' => get_username()))?>"
+                    profileURL: "<?= $GLOBALS["ABSOLUTE_URI_STUDIP"]."dispatch.php/profile?username=".urlencode(get_username()) ?>"
                 }
             });
         }
