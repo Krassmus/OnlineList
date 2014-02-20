@@ -1,6 +1,6 @@
 <style>
     body {
-        height: 400px;
+        height: 100px;
         background-color: #f8f8f8;
         background-image: none;
     }

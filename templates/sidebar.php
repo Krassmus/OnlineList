@@ -46,12 +46,24 @@ STUDIP.OnlineList = {
             STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/onlinelist/notifications", 
             15
         );
+        
+    },
+    registerAtWorker: function () {
         navigator.mozSocial.getWorker().port.onmessage = function onmessage(e) {
             //dump("SIDEBAR Got message: " + e.data.topic + " " + e.data.data +"\n");
             var topic = e.data.topic;
             var data = e.data.data;
-            jQuery("#debug_window").text("hey!");
+            jQuery("#debug_window").text(topic);
+            if (topic === "jsupdater.data") {
+                jQuery("#debug_window").text("yeah!");
+                STUDIP.JSUpdater.processUpdate(data);
+            }
         };
+        navigator.mozSocial.getWorker().port.onerror = function onerror(e) {
+            var topic = e.data.topic;
+            var data = e.data.data;
+            jQuery("#error_window").text(topic);
+        }
         
         navigator.mozSocial.getWorker().port.postMessage({
             topic: "jsupdater.register",
@@ -59,9 +71,10 @@ STUDIP.OnlineList = {
         });
     }
 };
-//STUDIP.jsupdate_enable = false;
+STUDIP.jsupdate_enable = false;
 jQuery(function () {
     jQuery("#notification_marker").bind("click", STUDIP.OnlineList.openNotificationWindow);
+    STUDIP.OnlineList.registerAtWorker();
 });
 </script>
 <style>
@@ -140,3 +153,4 @@ jQuery(function () {
 
 
 <div id="debug_window"></div>
+<div id="error_window" style='color: red'></div>

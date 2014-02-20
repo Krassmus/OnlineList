@@ -1,5 +1,35 @@
 var apiPort;
 var ports = [];
+var JSUpdater = {
+    ports: [],
+    fetchData: function () {
+        if (!JSUpdater.ports.length) {
+            return;
+        }
+        //fetch data
+        var r = new XMLHttpRequest(); 
+        r.open(
+            "GET", 
+            "<?= URLHelper::getURL("dipatch.php/jsupater/get", array('page' => "plugins.php/onlinelist/worker")) ?>", 
+            true
+        );
+        r.onreadystatechange = function () { 
+            if (r.readyState != 4 || r.status != 200) return;
+            JSUpdater.deliverData(JSON.parse(r.responseText));
+        };
+        r.send();
+    },
+    deliverData: function (data) {
+        for (var i = 0; i < JSUpdater.ports.length; i++) {
+            JSUpdater.ports[i].postMessage({
+                'topic': "jsupdater.data",
+                'data': data
+            });
+        }
+    }
+};
+setInterval(JSUpdater.fetchData, 2000);
+
 onconnect = function(e) {
     var port = e.ports[0];
     ports.push(port);

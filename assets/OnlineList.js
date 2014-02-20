@@ -2,7 +2,7 @@ STUDIP.OnlineList = {
     startSidebarPanel: function () {
         var data = {
             // currently required
-            "name": "Stud.IP OnlineList",
+            "name": STUDIP.UNI_NAME_CLEAN,
             "iconURL": STUDIP.ASSETS_URL + "/images/icons/16/blue/seminar.png",
             "icon32URL": STUDIP.ASSETS_URL + "/images/icons/32/blue/seminar.png",
             "icon64URL": STUDIP.ASSETS_URL + "/images/icons/64/blue/seminar.png",
