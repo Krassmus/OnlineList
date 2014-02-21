@@ -43,20 +43,20 @@
     }
 </style>
 <script>
+    
+function debugWorker(topic, data) {
+    jQuery("<li>").text(topic).append(jQuery("<p>").text(typeof data === "string" ? "(string)" + data : JSON.stringify(data))).appendTo("#debug_window");
+}
+
 STUDIP.OnlineList = {
     registerAtWorker: function () {
         navigator.mozSocial.getWorker().port.onmessage = function (e) {
             var topic = e.data.topic;
             var data = e.data.data;
             if (topic === "jsupdater.data") {
+                //debugWorker("jsupdater.data", data);
+                
                 STUDIP.JSUpdater.processUpdate(typeof data === "string" ? JSON.parse(data) : data);
-                if (jQuery("#notification_list > ul > li").length === 0) {
-                    jQuery("#no_notifications").show();
-                } else {
-                    jQuery("#no_notifications").hide();
-                }
-                jQuery("#notification_list > ul > li a[href]").attr("target", "_blank");
-                jQuery("body").css("height", jQuery("#notification_container").height() + "px");
             }
         };
         navigator.mozSocial.getWorker().port.onerror = function (e) {
@@ -72,6 +72,18 @@ STUDIP.OnlineList = {
     }
 };
 STUDIP.jsupdate_enable = false;
+window.setInterval(function () {
+    if (jQuery("#notification_list > ul > li").length === 0) {
+        jQuery("#no_notifications").show();
+    } else {
+        jQuery("#no_notifications").hide();
+    }
+    jQuery("#notification_list > ul > li a[href]").attr("target", "_blank");
+    jQuery("body").css("height", jQuery("#notification_container").height() + "px");
+}, 500);
+jQuery(function () {
+    STUDIP.OnlineList.registerAtWorker();
+});
 </script>
 
 <div id="notification_container">
@@ -86,3 +98,6 @@ STUDIP.jsupdate_enable = false;
 </div>
 
 <div id="notification_marker" style="display: none;"></div>
+
+<ul id="debug_window"></ul>
+<div id="error_window" style='color: red'></div>
