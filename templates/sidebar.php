@@ -8,8 +8,6 @@
     });
 }, 5000);*/
 
-window.setTimeout(function () { window.location.reload(); }, 1000 * 60 * 25);
-
 jQuery(".actions [data-chaturl]").live("click", function () {
     var chaturl = jQuery(this).data("chaturl");
     navigator.mozSocial.openChatWindow(chaturl);
@@ -17,13 +15,13 @@ jQuery(".actions [data-chaturl]").live("click", function () {
 });
 
 function debugWorker(topic, data) {
-    jQuery("<li>").text(topic).append(jQuery("<p>").text(typeof data === "string" ? data : JSON.stringify(data))).appendTo("#debug_window");
+    jQuery("<li>").text(topic).append(jQuery("<p>").text(typeof data === "string" ? "(string)" + data : JSON.stringify(data))).appendTo("#debug_window");
 }
 
 STUDIP.OnlineList = {
     updateUsers: function (data) {
         jQuery("#online_users").html(data.userlist);
-    }
+    },
     askToAddContact: function (username, name) {
         var name = jQuery(name).text();
         name = name.substr(0, name.indexOf("("));
@@ -61,8 +59,7 @@ STUDIP.OnlineList = {
             var topic = e.data.topic;
             var data = e.data.data;
             if (topic === "jsupdater.data") {
-                debugWorker(topic, data);
-                STUDIP.JSUpdater.processUpdate(data);
+                STUDIP.JSUpdater.processUpdate(typeof data === "string" ? JSON.parse(data) : data);
             }
         };
         navigator.mozSocial.getWorker().port.onerror = function (e) {

@@ -43,15 +43,35 @@
     }
 </style>
 <script>
-window.setInterval(function () {
-    if (jQuery("#notification_list > ul > li").length === 0) {
-        jQuery("#no_notifications").show();
-    } else {
-        jQuery("#no_notifications").hide();
+STUDIP.OnlineList = {
+    registerAtWorker: function () {
+        navigator.mozSocial.getWorker().port.onmessage = function (e) {
+            var topic = e.data.topic;
+            var data = e.data.data;
+            if (topic === "jsupdater.data") {
+                STUDIP.JSUpdater.processUpdate(typeof data === "string" ? JSON.parse(data) : data);
+                if (jQuery("#notification_list > ul > li").length === 0) {
+                    jQuery("#no_notifications").show();
+                } else {
+                    jQuery("#no_notifications").hide();
+                }
+                jQuery("#notification_list > ul > li a[href]").attr("target", "_blank");
+                jQuery("body").css("height", jQuery("#notification_container").height() + "px");
+            }
+        };
+        navigator.mozSocial.getWorker().port.onerror = function (e) {
+            var topic = e.data.topic;
+            var data = e.data.data;
+            jQuery("#error_window").text(topic);
+        };
+        
+        navigator.mozSocial.getWorker().port.postMessage({
+            topic: "jsupdater.register",
+            data: {}
+        });
     }
-    jQuery("#notification_list > ul > li a[href]").attr("target", "_blank");
-    jQuery("body").css("height", jQuery("#notification_container").height() + "px");
-}, 500);
+};
+STUDIP.jsupdate_enable = false;
 </script>
 
 <div id="notification_container">
