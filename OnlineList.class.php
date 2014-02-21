@@ -31,7 +31,18 @@ class OnlineList extends StudIPPlugin implements SystemPlugin {
             $navigation->addSubNavigation("blubber", $nav);
         });
         
-        
+        if (UpdateInformation::isCollecting() && Request::get("page") === "plugins.php/onlinelist/worker") {
+            $data = array();
+            
+            $contacts = $this->getOnlineContacts();
+            $actions = HookCenter::run("DisplayOnlineUserActionHook", new DisplayOnlineUserActionHook("onlinelist"));
+
+            $template = $this->getTemplate("_sidebar_users.php", null);
+            $template->set_attribute('contacts', $contacts);
+            $template->set_attribute('actions', $actions);
+            $data['userlist'] = $template->render();
+            UpdateInformation::setInformation("OnlineList.updateUsers", $data);
+        }
     }
     
     public function sidebar_action() {

@@ -3,25 +3,21 @@ var ports = [];
 var JSUpdater = {
     ports: [],
     fetchData: function () {
-        broadcast("debug.yeah" + JSUpdater.ports.length, {});
+        
         if (!JSUpdater.ports.length) {
-            return;
+            //return;
         }
         
         //fetch data
-        var r = new XMLHttpRequest(); 
-        r.open(
+        var xhr = new XMLHttpRequest(); 
+        xhr.open(
             "GET",
-            "<?= $GLOBALS["ABSOLUTE_URI_STUDIP"]."dispatch.php/jsupater/get?page=".urlencode("plugins.php/onlinelist/worker") ?>", 
-            true
+            "<?= $GLOBALS["ABSOLUTE_URI_STUDIP"]."dispatch.php/jsupdater/get?page=".urlencode("plugins.php/onlinelist/worker") ?>", 
+            false
         );
-        r.onreadystatechange = function () {
-            broadcast("jsupdater.data", JSON.parse(r.responseText));
-            if (r.readyState != 4 || r.status != 200) return;
-            JSUpdater.deliverData(JSON.parse(r.responseText));
-            
-        };
-        r.send();
+        xhr.send();
+        broadcast("jsupdater.data", xhr.responseText);
+        //JSUpdater.deliverData(JSON.parse(xhr.responseText));
     },
     deliverData: function (data) {
         for (var i = 0; i < JSUpdater.ports.length; i++) {

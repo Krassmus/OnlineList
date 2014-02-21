@@ -1,12 +1,12 @@
 <script>
-window.setInterval(function () {
+/*window.setInterval(function () {
     jQuery.ajax({
         'url': STUDIP.ABSOLUTE_URI_STUDIP + "plugins.php/onlinelist/sidebar_users",
         'success': function (data) {
             jQuery("#online_users").html(data);
         }
     });
-}, 5000);
+}, 5000);*/
 
 window.setTimeout(function () { window.location.reload(); }, 1000 * 60 * 25);
 
@@ -17,10 +17,13 @@ jQuery(".actions [data-chaturl]").live("click", function () {
 });
 
 function debugWorker(topic, data) {
-    jQuery("<li>").text(topic).append(jQuery("<p>").text(JSON.stringify(data))).appendTo("#debug_window");
+    jQuery("<li>").text(topic).append(jQuery("<p>").text(typeof data === "string" ? data : JSON.stringify(data))).appendTo("#debug_window");
 }
 
 STUDIP.OnlineList = {
+    updateUsers: function (data) {
+        jQuery("#online_users").html(data.userlist);
+    }
     askToAddContact: function (username, name) {
         var name = jQuery(name).text();
         name = name.substr(0, name.indexOf("("));
@@ -54,15 +57,15 @@ STUDIP.OnlineList = {
         
     },
     registerAtWorker: function () {
-        navigator.mozSocial.getWorker().port.onmessage = function onmessage(e) {
+        navigator.mozSocial.getWorker().port.onmessage = function (e) {
             var topic = e.data.topic;
             var data = e.data.data;
-            debugWorker(topic, data);
             if (topic === "jsupdater.data") {
+                debugWorker(topic, data);
                 STUDIP.JSUpdater.processUpdate(data);
             }
         };
-        navigator.mozSocial.getWorker().port.onerror = function onerror(e) {
+        navigator.mozSocial.getWorker().port.onerror = function (e) {
             var topic = e.data.topic;
             var data = e.data.data;
             jQuery("#error_window").text(topic);
