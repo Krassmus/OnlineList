@@ -15,6 +15,11 @@ jQuery(".actions [data-chaturl]").live("click", function () {
     navigator.mozSocial.openChatWindow(chaturl);
     return false;
 });
+
+function debugWorker(topic, data) {
+    jQuery("<li>").text(topic).append(jQuery("<p>").text(JSON.stringify(data))).appendTo("#debug_window");
+}
+
 STUDIP.OnlineList = {
     askToAddContact: function (username, name) {
         var name = jQuery(name).text();
@@ -53,9 +58,8 @@ STUDIP.OnlineList = {
             //dump("SIDEBAR Got message: " + e.data.topic + " " + e.data.data +"\n");
             var topic = e.data.topic;
             var data = e.data.data;
-            jQuery("#debug_window").text(topic);
+            debugWorker(topic, data);
             if (topic === "jsupdater.data") {
-                jQuery("#debug_window").text("yeah!");
                 STUDIP.JSUpdater.processUpdate(data);
             }
         };
@@ -152,5 +156,5 @@ jQuery(function () {
 </div>
 
 
-<div id="debug_window"></div>
+<ul id="debug_window"></ul>
 <div id="error_window" style='color: red'></div>

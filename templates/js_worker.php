@@ -3,7 +3,7 @@ var ports = [];
 var JSUpdater = {
     ports: [],
     fetchData: function () {
-        throw JSON.stringify(JSUpdater.ports);
+        broadcast("debug.yeah" + JSUpdater.ports.length, {});
         if (!JSUpdater.ports.length) {
             return;
         }
@@ -59,6 +59,7 @@ onconnect = function(e) {
             });
         }
         if (msg.topic === "jsupdater.register") {
+            JSUpdater.ports.push(port);
             port.postMessage({
                 topic: "jsupdater.registered",
                 data: {
