@@ -135,11 +135,18 @@ jQuery(function () {
                 $alert = true;
             }
         } ?>
-        <a id="notification_marker" style="display: inline-block; cursor: pointer;"><?= count($notifications) ?></a>
+        <? $lastvisit = (int) UserConfig::get($GLOBALS['user']->id)->getValue('NOTIFICATIONS_SEEN_LAST_DATE') ?>
+        <a id="notification_marker" style="display: inline-block; cursor: pointer;" data-lastvisit="<?= $lastvisit ?>"><?= count($notifications) ?></a>
         <div class="list below" id="notification_list" style="display: none;">
             <ul>
             </ul>
         </div>
+        <? if (PersonalNotifications::isAudioActivated()) : ?>
+        <audio id="audio_notification" preload="none">
+            <source src="<?= Assets::url('sounds/blubb.ogg') ?>" type="audio/ogg">
+            <source src="<?= Assets::url('sounds/blubb.mp3') ?>" type="audio/mpeg">
+        </audio>
+        <? endif ?>
         
         <?= $quicksearch->render() ?>
         <div id="add_user_question" style="display: none; border-top: #aaaaaa solid 1px; font-size: 0.8em;">
