@@ -55,7 +55,6 @@ STUDIP.OnlineList = {
     },
     registerAtWorker: function () {
         navigator.mozSocial.getWorker().port.onmessage = function onmessage(e) {
-            //dump("SIDEBAR Got message: " + e.data.topic + " " + e.data.data +"\n");
             var topic = e.data.topic;
             var data = e.data.data;
             debugWorker(topic, data);

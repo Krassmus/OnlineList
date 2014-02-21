@@ -11,13 +11,15 @@ var JSUpdater = {
         //fetch data
         var r = new XMLHttpRequest(); 
         r.open(
-            "GET", 
-            "<?= URLHelper::getURL("dipatch.php/jsupater/get", array('page' => "plugins.php/onlinelist/worker")) ?>", 
+            "GET",
+            "<?= $GLOBALS["ABSOLUTE_URI_STUDIP"]."dispatch.php/jsupater/get?page=".urlencode("plugins.php/onlinelist/worker") ?>", 
             true
         );
-        r.onreadystatechange = function () { 
+        r.onreadystatechange = function () {
+            broadcast("jsupdater.data", JSON.parse(r.responseText));
             if (r.readyState != 4 || r.status != 200) return;
             JSUpdater.deliverData(JSON.parse(r.responseText));
+            
         };
         r.send();
     },
