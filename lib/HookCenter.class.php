@@ -126,6 +126,7 @@ class HookCenter
      */
     static public function register($hookclass, $callable) 
     {
+        $hookclass = strtolower($hookclass);
         self::$hooks[$hookclass][] = $callable;
     }
     
@@ -154,6 +155,7 @@ class HookCenter
      */
     static public function run($hookclass, $instance = null) 
     {
+        $hookclass = strtolower($hookclass);
         if ($instance === null or !is_a($instance, $hookclass)) {
             $instance = new $hookclass();
         }
