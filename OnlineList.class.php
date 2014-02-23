@@ -1,9 +1,10 @@
 <?php
 
 require_once 'lib/messaging.inc.php';
-if (!class_exists("HookCenter")) {
-    include_once dirname(__file__)."/lib/HookCenter.class.php";
+if (!class_exists("HookCenter") && file_exists($STUDIP_BASE_PATH."/lib/classes/HookCenter.class.php")) {
+    include_once "lib/classes/HookCenter.class.php";
 }
+include_once dirname(__file__)."/lib/ActionNavigationHook.class.php";
 
 class OnlineList extends StudIPPlugin implements SystemPlugin {
     
@@ -17,26 +18,17 @@ class OnlineList extends StudIPPlugin implements SystemPlugin {
         PageLayout::addHeadElement("script", array(), "STUDIP.UNI_NAME_CLEAN = '".htmlReady($GLOBALS['UNI_NAME_CLEAN'])."'");
         Navigation::addItem("/onlinelist", $activator);
         
-        HookCenter::register("DisplayOnlineUserActionHook", function ($navigation) {
-            //Die voreingestellten Aktionen der Nutzer
-            $nav = new DisplayOnlineUserActionHook(_("Nachricht verfassen"), URLHelper::getURL("sms_send.php", array('rec_uname' => ':username')));
-            $nav->setImage(Assets::image_path("icons/16/blue/mail.png"), array('title' => _("Nachricht verfassen")));
-            $navigation->addSubNavigation("messaging", $nav);
-
-            $nav = new DisplayOnlineUserActionHook(_("anblubbern"), URLHelper::getURL("plugins.php/blubber/streams/global?mention=:username", array('mention' => ':username')));
-            $nav->setImage(Assets::image_path("icons/16/blue/blubber.png"), array(
-                'title' => _("anblubbern"),
-                'data-chaturl' => URLHelper::getURL("plugins.php/onlinelist/privateblubber", array('username' => ":username"))
-            ));
-            $navigation->addSubNavigation("blubber", $nav);
-        });
-        
         if (UpdateInformation::isCollecting() && Request::get("page") === "plugins.php/onlinelist/worker") {
             $data = array();
             
             $contacts = $this->getOnlineContacts();
-            $actions = HookCenter::run("DisplayOnlineUserActionHook", new DisplayOnlineUserActionHook("onlinelist"));
-
+            $actions = $actions = $this->getUserActions();
+            if (class_exists("HookCenter")) {
+                $actions = HookCenter::run("DisplayOnlineUserActionHook", $actions);
+            } else {
+                NotificationCenter::postNotification("DisplayOnlineUserActionHook", $actions);
+            }
+            
             $template = $this->getTemplate("_sidebar_users.php", null);
             $template->set_attribute('contacts', $contacts);
             $template->set_attribute('actions', $actions);
@@ -51,8 +43,13 @@ class OnlineList extends StudIPPlugin implements SystemPlugin {
         $quicksearch = new QuickSearch("new_contact", new StandardSearch("username"));
         $quicksearch->fireJSFunctionOnSelect("STUDIP.OnlineList.askToAddContact");
         
-        $actions = HookCenter::run("DisplayOnlineUserActionHook", new DisplayOnlineUserActionHook("onlinelist"));
-        
+        $actions = $this->getUserActions();
+        if (class_exists("HookCenter")) {
+            $actions = HookCenter::run("DisplayOnlineUserActionHook", $actions);
+        } else {
+            NotificationCenter::postNotification("DisplayOnlineUserActionHook", $actions);
+        }
+            
         $template = $this->getTemplate("sidebar.php", $this->getTemplate("emptylayout.php", null));
         $template->set_attribute('contacts', $contacts);
         $template->set_attribute('quicksearch', $quicksearch);
@@ -60,19 +57,20 @@ class OnlineList extends StudIPPlugin implements SystemPlugin {
         echo $template->render();
     }
     
-    public function sidebar_users_action() {
-        $contacts = $this->getOnlineContacts();
-        $actions = HookCenter::run("DisplayOnlineUserActionHook", new DisplayOnlineUserActionHook("onlinelist"));
-        
-        $template = $this->getTemplate("_sidebar_users.php", null);
-        $template->set_attribute('contacts', $contacts);
-        $template->set_attribute('actions', $actions);
-        echo studip_utf8encode($template->render());
-    }
-    
-    public function status_action() {
-        $template = $this->getTemplate("status.php", null);
-        echo $template->render();
+    public function getUserActions() {
+        $navigation = new DisplayOnlineUserActionHook("onlinelist");
+        //Die voreingestellten Aktionen der Nutzer
+        $nav = new DisplayOnlineUserActionHook(_("Nachricht verfassen"), URLHelper::getURL("sms_send.php", array('rec_uname' => ':username')));
+        $nav->setImage(Assets::image_path("icons/16/blue/mail.png"), array('title' => _("Nachricht verfassen")));
+        $navigation->addSubNavigation("messaging", $nav);
+
+        $nav = new DisplayOnlineUserActionHook(_("anblubbern"), URLHelper::getURL("plugins.php/blubber/streams/global?mention=:username", array('mention' => ':username')));
+        $nav->setImage(Assets::image_path("icons/16/blue/blubber.png"), array(
+            'title' => _("anblubbern"),
+            'data-chaturl' => URLHelper::getURL("plugins.php/onlinelist/privateblubber", array('username' => ":username"))
+        ));
+        $navigation->addSubNavigation("blubber", $nav);
+        return $navigation;
     }
     
     public function worker_action() {
