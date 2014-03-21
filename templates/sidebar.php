@@ -20,7 +20,15 @@ function debugWorker(topic, data) {
 
 STUDIP.OnlineList = {
     updateUsers: function (data) {
-        jQuery("#online_users").html(data.userlist);
+        if (data.userlist) {
+            jQuery("#online_users").html(data.userlist);
+        }
+        if (typeof data.notregistered !== "undefined") {
+            jQuery("input[name=login_ticket]").val() || jQuery("input[name=login_ticket]").val(data.ticket);
+            jQuery("input[name=security_token]").val() || jQuery("input[name=security_token]").val(data.CSRFProtectionToken);
+            jQuery("#login").show();
+            jQuery("#online_users").hide();
+        }
     },
     askToAddContact: function (username, name) {
         var name = jQuery(name).text();
@@ -125,9 +133,20 @@ jQuery(function () {
     #add_user_question button.button {
         min-width: 70px;
     }
+    
+    #login {
+        margin-top: 180px;
+    }
+    #loginform > * {
+        text-align: center;
+        width: 100px;
+    }
+    #loginform input {
+        width: 80%;
+    }
 </style>
 <div id="content">
-    <div style="text-align: center; background-color: #899AB9; color: #eeeeee; padding: 2px; padding-top: 0px; border-bottom: #1E3E70 1px solid;">
+    <div style="text-align: center; background-color: #899AB9; color: #eeeeee; padding: 2px; padding-top: 0px; border-bottom: #1E3E70 1px solid; position: fixed; top: 0px; width: 100%;">
         <? $notifications = PersonalNotifications::getMyNotifications() ?>
         <? $lastvisit = (int) UserConfig::get($GLOBALS['user']->id)->getValue('NOTIFICATIONS_SEEN_LAST_DATE') ?>
         <? foreach ($notifications as $notification) {
@@ -156,9 +175,13 @@ jQuery(function () {
             </div>
         </div>
     </div>
-    <ul id="online_users">
+    <div style="min-height: 25px;"></div>
+    <ul id="online_users"<?= $GLOBALS['user']->id === "nobody" ? ' style="display: none;"' : "" ?>>
         <?= $this->render_partial("_sidebar_users.php", compact('contacts', 'actions')) ?>
     </ul>
+    <div id="login"<?= $GLOBALS['user']->id !== "nobody" ? ' style="display: none;"' : "" ?>>
+        <?= $this->render_partial("_login.php")  ?>
+    </div>
 </div>
 
 
