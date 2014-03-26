@@ -16,8 +16,15 @@
 </style>
 <script>
 STUDIP.jsupdate_enable = false;
-jQuery(function () { jQuery("textarea.blubber").focus(); });
+jQuery(function () { 
+    jQuery("textarea.blubber").focus(); 
+    STUDIP.Blubber.makeTextareasAutoresizable();
+});
 </script>
 
 
-<textarea class="blubber">@<?= htmlReady(Request::get("username")) ?>, </textarea>
+<textarea class="blubber" id="new_posting">
+
+
+@<?= htmlReady(Request::get("username")) ?>
+</textarea>

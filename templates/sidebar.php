@@ -93,6 +93,18 @@ jQuery(function () {
         background-color: #E7EBF1;
         background-image: none;
     }
+    #topbar {
+        text-align: center;
+        background-color: #899AB9;
+        color: #eeeeee;
+        padding: 2px;
+        padding-top: 0px;
+        border-bottom: #1E3E70 1px solid;
+        position: fixed;
+        top: 0px;
+        width: 100%;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    }
     #content ul {
         margin: 0px;
         padding: 0px;
@@ -146,7 +158,7 @@ jQuery(function () {
     }
 </style>
 <div id="content">
-    <div style="text-align: center; background-color: #899AB9; color: #eeeeee; padding: 2px; padding-top: 0px; border-bottom: #1E3E70 1px solid; position: fixed; top: 0px; width: 100%;">
+    <div id="topbar">
         <? $notifications = PersonalNotifications::getMyNotifications() ?>
         <? $lastvisit = (int) UserConfig::get($GLOBALS['user']->id)->getValue('NOTIFICATIONS_SEEN_LAST_DATE') ?>
         <? foreach ($notifications as $notification) {
@@ -175,7 +187,7 @@ jQuery(function () {
             </div>
         </div>
     </div>
-    <div style="min-height: 25px;"></div>
+    <div style="min-height: 28px;"></div>
     <ul id="online_users"<?= $GLOBALS['user']->id === "nobody" ? ' style="display: none;"' : "" ?>>
         <?= $this->render_partial("_sidebar_users.php", compact('contacts', 'actions')) ?>
     </ul>

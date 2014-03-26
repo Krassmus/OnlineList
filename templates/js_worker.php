@@ -3,11 +3,6 @@ var ports = [];
 var JSUpdater = {
     ports: [],
     fetchData: function () {
-        
-        if (!JSUpdater.ports.length) {
-            //return;
-        }
-        
         //fetch data
         var xhr = new XMLHttpRequest(); 
         xhr.open(
@@ -17,7 +12,11 @@ var JSUpdater = {
         );
         xhr.send();
         broadcast("jsupdater.data", xhr.responseText);
-        //JSUpdater.deliverData(JSON.parse(xhr.responseText));
+        for (var scriptname in JSUpdater.additionalScripts) {
+            if (typeof JSUpdater.additionalScripts[scriptname] === "function") {
+                JSUpdater.additionalScripts[scriptname](xhr.responseText);
+            }
+        }
     },
     deliverData: function (data) {
         for (var i = 0; i < JSUpdater.ports.length; i++) {
@@ -26,7 +25,8 @@ var JSUpdater = {
                 'data': data
             });
         }
-    }
+    },
+    additionalScripts: {}
 };
 setInterval(JSUpdater.fetchData, 2000);
 
@@ -73,4 +73,16 @@ function broadcast(topic, data) {
   for (var i = 0; i < ports.length; i++) {
     ports[i].postMessage({topic: topic, data: data});
   }
+}
+
+
+<?
+$hook = new AddToSocialWorkerHook();
+if (class_exists("HookCenter")) {
+    $hook = HookCenter::run("AddToSocialWorkerHook", $hook);
+} else {
+    NotificationCenter::postNotification("AddToSocialWorkerHook", $hook);
+}
+foreach ($hook->getScripts() as $script) {
+    echo $script;
 }

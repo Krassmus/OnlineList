@@ -5,6 +5,7 @@ if (!class_exists("HookCenter") && file_exists($STUDIP_BASE_PATH."/lib/classes/H
     include_once "lib/classes/HookCenter.class.php";
 }
 include_once dirname(__file__)."/lib/ActionNavigationHook.class.php";
+include_once dirname(__file__)."/lib/AddToSocialWorkerHook.class.php";
 
 class OnlineList extends StudIPPlugin implements SystemPlugin {
     
@@ -21,18 +22,26 @@ class OnlineList extends StudIPPlugin implements SystemPlugin {
         if (UpdateInformation::isCollecting() && Request::get("page") === "plugins.php/onlinelist/worker") {
             $data = array();
             
-            $contacts = $this->getOnlineContacts();
-            $actions = $actions = $this->getUserActions();
-            if (class_exists("HookCenter")) {
-                $actions = HookCenter::run("DisplayOnlineUserActionHook", $actions);
+            if ($GLOBALS['user']->id !== "nobody") {
+                $contacts = $this->getOnlineContacts();
+                $actions = $actions = $this->getUserActions();
+                if (class_exists("HookCenter")) {
+                    $actions = HookCenter::run("DisplayOnlineUserActionHook", $actions);
+                } else {
+                    NotificationCenter::postNotification("DisplayOnlineUserActionHook", $actions);
+                }
+
+                $template = $this->getTemplate("_sidebar_users.php", null);
+                $template->set_attribute('contacts', $contacts);
+                $template->set_attribute('actions', $actions);
+                $data['userlist'] = $template->render();
             } else {
-                NotificationCenter::postNotification("DisplayOnlineUserActionHook", $actions);
+                $data['notregistered'] = array(
+                    'ticket' => Seminar_Session::get_ticket(),
+                    'CSRFProtectionToken' => CSRFProtection::token()
+                );
             }
             
-            $template = $this->getTemplate("_sidebar_users.php", null);
-            $template->set_attribute('contacts', $contacts);
-            $template->set_attribute('actions', $actions);
-            $data['userlist'] = $template->render();
             UpdateInformation::setInformation("OnlineList.updateUsers", $data);
         }
     }
@@ -103,6 +112,7 @@ class OnlineList extends StudIPPlugin implements SystemPlugin {
         PageLayout::setTitle($user['Vorname']." ".$user['Nachname']);
         PageLayout::removeHeadElement("link", array('rel' => 'shortcut icon'));
         PageLayout::addHeadElement("link", array('rel' => 'shortcut icon', 'href' => Assets::image_path("icons/32/black/blubber.png")));
+        PageLayout::addHeadElement("script", array('src' => $GLOBALS['ABSOLUTE_URI_STUDIP']."plugins_packages/core/Blubber/assets/javascripts/blubber.js"), "");
         
         $template = $this->getTemplate("privateblubber.php", $this->getTemplate("emptylayout.php", null));
         echo $template->render();
