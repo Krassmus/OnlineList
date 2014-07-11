@@ -42,7 +42,7 @@ object. So if you want to add an icon/action to the list, just call
 ActionNavigation objects. Also you can delete existing subnavigation
 objects or rearrange them - just like in casual navigation.
 
-If you want to add an action that corresponding to a POST-request and
+If you want to add an action that is corresponding to a POST-request and
 not a simple GET-request, you can call #addPostVariables(name, value)
 and the icon should be wrapped in a form-tag with hidden input 
 fields and an XSRF-token, so your action is a valid POST-request.
