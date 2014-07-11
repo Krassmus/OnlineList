@@ -14,7 +14,7 @@ class OnlineList extends StudIPPlugin implements SystemPlugin {
         PageLayout::addStylesheet($this->getPluginURL()."/assets/OnlineList.css");
         
         $activator = new Navigation(_("OnlineListe"), "#");
-        $activator->setImage(Assets::image_path("header/community.png"));
+        $activator->setImage(Assets::image_path("icons/28/lightblue/community.png"));
         PageLayout::addHeadElement("script", array(), "STUDIP.UNI_NAME_CLEAN = '".htmlReady($GLOBALS['UNI_NAME_CLEAN'])."'");
         Navigation::addItem("/onlinelist", $activator);
         
