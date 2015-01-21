@@ -15,7 +15,7 @@ class OnlineList extends StudIPPlugin implements SystemPlugin {
         PageLayout::addStylesheet($this->getPluginURL()."/assets/OnlineList.css");
         
         $activator = new Navigation(_("OnlineListe"), "#");
-        $activator->setImage(Assets::image_path("icons/28/lightblue/community.png"));
+        $activator->setImage(Assets::image_path("icons/lightblue/group2.svg"));
         PageLayout::addHeadElement("script", array(), "STUDIP.UNI_NAME_CLEAN = '".htmlReady($GLOBALS['UNI_NAME_CLEAN'])."'");
         Navigation::addItem("/onlinelist", $activator);
         
@@ -97,7 +97,6 @@ class OnlineList extends StudIPPlugin implements SystemPlugin {
                  WHERE user_online.last_lifesign > (UNIX_TIMESTAMP() - 10 * 60) 
                     AND user_online.user_id <> :me
                     AND contact.owner_id = :me
-                    AND contact.buddy > 0
                     AND " . get_vis_query('auth_user_md5', 'online') . " > 0
                  ORDER BY Nachname ASC, Vorname ASC";
         $statement = DBManager::get()->prepare($query);
@@ -124,9 +123,10 @@ class OnlineList extends StudIPPlugin implements SystemPlugin {
         }
         $username = Request::username('username');
 
-        $msging = new messaging;
-        //Buddie hinzufuegen
-        $msging->add_buddy($username, 0);
+        Contact::import(array(
+                'owner_id' => User::findCurrent()->id,
+                'user_id' => User::findByUsername($username)->id)
+        )->store();
     }
     
     public function notifications_action() {
